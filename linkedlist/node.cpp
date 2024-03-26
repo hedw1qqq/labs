@@ -6,7 +6,7 @@ using namespace std;
 class Node {
 public:
     int val;
-    Node* next;
+    Node *next;
 
     Node() {
         val = 0;
@@ -18,7 +18,7 @@ public:
         next = nullptr;
     }
 
-    Node(int value, Node* nextNode) {
+    Node(int value, Node *nextNode) {
         val = value;
         next = nextNode;
     }
@@ -42,7 +42,7 @@ public:
         }
     }
 
-    bool isEmpty(){
+    bool isEmpty() {
         return head == nullptr;
     }
 
@@ -56,7 +56,7 @@ public:
         head = nullptr;
     }
 
-    void printNode(const Node *node) {
+    void printNode(Node *node) {
         if (node == nullptr) return;
         else {
             cout << node << " " << node->val << " " << node->next << endl;
@@ -64,7 +64,7 @@ public:
 
     }
 
-    void printList(){
+    void printList() {
         Node *current = head;
         while (current != nullptr) {
             cout << current << " " << current->val << " " << current->next << endl;
@@ -137,7 +137,45 @@ public:
             }
         }
     }
+
+    void swapNode(Node *ptr, bool moveForward) {
+        if (ptr == nullptr || (moveForward && ptr->next == nullptr) || (!moveForward && findPrev(ptr) == nullptr))
+            return;
+
+        if (moveForward) {
+            Node *nextNode = ptr->next;
+            ptr->next = nextNode->next;
+            nextNode->next = ptr;
+
+            Node *prevNode = findPrev(ptr);
+            if (prevNode == nullptr)
+                head = nextNode;
+            else
+                prevNode->next = nextNode;
+        } else {
+            Node *prevNode = findPrev(ptr);
+            Node *prevPrevNode = findPrev(prevNode);
+
+            if (prevPrevNode == nullptr) {
+                head = ptr;
+            } else {
+                prevPrevNode->next = ptr;
+            }
+
+            prevNode->next = ptr->next;
+            ptr->next = prevNode;
+        }
+    }
+
+    void insertAtBeginning(int value) {
+        Node *newNode = new Node(value);
+        newNode->next = head;
+        head = newNode;
+    }
+
+
 };
+
 
 int main() {
     LinkedList list;
@@ -161,8 +199,10 @@ int main() {
     list.deleteNode(list.findNode(2));
     list.printList();
 
-    list.deleteList();
+    list.insertAtBeginning(312);
+    list.swapNode(list.findNode(5), true);
     list.printList();
+
 
     return 0;
 }
