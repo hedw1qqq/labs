@@ -138,33 +138,39 @@ public:
         }
     }
 
-    void swapNode(Node *ptr, bool moveForward) {
-        if (ptr == nullptr || (moveForward && ptr->next == nullptr) || (!moveForward && findPrev(ptr) == nullptr))
+    void swapNodewithprevious(Node *ptr) {
+        if (ptr == nullptr)
             return;
 
-        if (moveForward) {
-            Node *nextNode = ptr->next;
-            ptr->next = nextNode->next;
-            nextNode->next = ptr;
+        Node *prevNode = findPrev(ptr);
+        Node *prevPrevNode = findPrev(prevNode);
 
-            Node *prevNode = findPrev(ptr);
-            if (prevNode == nullptr)
-                head = nextNode;
-            else
-                prevNode->next = nextNode;
+        if (prevPrevNode == nullptr) {
+            head = ptr;
         } else {
-            Node *prevNode = findPrev(ptr);
-            Node *prevPrevNode = findPrev(prevNode);
-
-            if (prevPrevNode == nullptr) {
-                head = ptr;
-            } else {
-                prevPrevNode->next = ptr;
-            }
-
-            prevNode->next = ptr->next;
-            ptr->next = prevNode;
+            prevPrevNode->next = ptr;
         }
+
+        prevNode->next = ptr->next;
+        ptr->next = prevNode;
+
+    }
+
+    void swapNodewithnext(Node *ptr) {
+        if (ptr == nullptr)
+            return;
+
+
+        Node *nextNode = ptr->next;
+        ptr->next = nextNode->next;
+        nextNode->next = ptr;
+
+        Node *prevNode = findPrev(ptr);
+        if (prevNode == nullptr)
+            head = nextNode;
+        else
+            prevNode->next = nextNode;
+
     }
 
     void insertAtBeginning(int value) {
@@ -200,7 +206,7 @@ int main() {
     list.printList();
 
     list.insertAtBeginning(312);
-    list.swapNode(list.findNode(5), true);
+    list.swapNodewithprevious(list.findNode(5));
     list.printList();
 
 
